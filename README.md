@@ -1,8 +1,8 @@
-# Intelligently Change Directory (icd) Version 0.2
-Avoid using tiresome aliases to change directories!
-Change into arbitrary subdirectories 
-The "algorithm" is greedy: the shortest matching path is used 
-Only works for medium size trees, but fear not. 
+# Intelligently Change Directory (icd) 0.2
+**Avoid using tiresome aliases to change directories!**
+Change into arbitrary subdirectories.
+The "algorithm" is greedy: the shortest matching path is used.
+At the moment it only works for medium size trees, but fear not. 
 Optimization is on it's way!
 ## Installation
 ```
