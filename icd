@@ -1,0 +1,89 @@
+#!/bin/bash
+
+function icd(){
+	# todo
+	# abilities
+	# -h help 
+	# -v verbose
+	# -m? map tree
+	# - last dir
+	# ~/.icd/00_favorites
+	# ~/.icd/55_map
+	# ~/.icd/99_history 
+
+HELPTEXT="USAGE: icd [-h|--help] [-v|--verbose] [-l|.|--local] [keyword]\n\n
+\t-h|--help\tshow this help text\n
+\t-v|--verbose\tdestination directory\n
+\t-l|.|--local\tsearch at current directory"
+
+# PARSER + SET FLAGS
+################################################################
+POSITIONAL=()
+VERBOSE=FALSE
+VERYVERBOSE=FALSE
+LOCAL=FALSE
+while [[ $# -gt 0 ]]
+do
+	key="$1"
+
+	case $key in
+		-v|--verbose)
+			VERBOSE=TRUE
+			shift # past argument
+			;;
+		-vv|--veryverbose)
+			VERYVERBOSE=TRUE
+			shift # past argument
+			;;
+		-h|--help)
+			shift # past argument
+			echo -e $HELPTEXT && return 0;; 
+		.|-l|--local)
+			LOCAL=TRUE
+			shift # past argument
+			;;
+		*)    # unknown option
+			POSITIONAL+=("$1") # save it in an array for later
+			shift # past argument
+			;;
+	esac
+	done
+	set -- "${POSITIONAL[@]}" # restore positional parameters
+	if [[ ${#POSITIONAL[@]} -gt 1 ]]
+	then 
+		echo "Too many arguments!"
+		echo -e $HELPTEXT
+		return 0
+	fi
+	FINDARGUMENT=${POSITIONAL[0]}
+
+# FIND DIR
+################################################################
+DESTINATION=""
+FOUND=""
+if [[ $LOCAL = TRUE ]] 
+then 
+	DESTINATION="$( find . -not -path '*/\.*' -type d \
+		-iwholename "*${FINDARGUMENT%/}*" | \
+		awk '{ print length, $0 }' | \
+		sort -n | \
+		cut -d" " -f2- | \
+		head - -n 1 | \
+		sed -e 's/ /\\ /')"
+else 
+	#HERE COMES CASCATION OF FILES
+	DESTINATION="$( find ~ -not -path '*/\.*' -type d -iwholename "*${FINDARGUMENT%/}*" | awk '{ print length, $0 }' | sort -n | cut -d" " -f2- | head - -n 1 | sed -e 's/ /\\ /')"
+fi
+if [[ $VERBOSE = TRUE ]]
+then
+	echo "$DESTINATION"
+fi
+if [[ $VERYVERBOSE = TRUE ]]
+then 
+	echo "$DESTINATION"
+fi
+# CHANGE DIR	
+################################################################
+cd $DESTINATION
+}
+
