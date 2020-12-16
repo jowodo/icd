@@ -13,6 +13,6 @@ chmod +x install.sh
 ```
 
 ## Examples
-`icd uni` may change to `~/Documents/Univeristy`
-`icd uni*doc` may change to `~/Documents/University/Documents`
-`icd . doc` may change to `./anypath/doc`
+`icd uni` may change to `~/Documents/Univeristy`  
+`icd uni*doc` may change to `~/Documents/University/Documents`  
+`icd . doc` may change to `./anypath/doc`  
