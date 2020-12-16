@@ -1,0 +1,2 @@
+# icd
+intelligently change directory
