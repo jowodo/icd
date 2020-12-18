@@ -5,7 +5,9 @@ function icd(){
 	# abilities
 	# -h help 
 	# -v verbose
-	# -m? map tree
+	# -m? map tree and out to stdout
+	# -f follow links
+	# -s secret dirs 
 	# - last dir
 	# ~/.icd/00_favorites
 	# ~/.icd/55_map
