@@ -63,7 +63,7 @@ DESTINATION=""
 FOUND=""
 if [[ $LOCAL = TRUE ]] 
 then 
-	DESTINATION="$( find . -not -path '*/\.*' -type d \
+	DESTINATION="$( find -L . -not -path '*/\.*' -type d \
 		-iwholename "*${FINDARGUMENT%/}*" | \
 		awk '{ print length, $0 }' | \
 		sort -n | \
@@ -72,7 +72,13 @@ then
 		sed -e 's/ /\\ /')"
 else 
 	#HERE COMES CASCATION OF FILES
-	DESTINATION="$( find ~ -not -path '*/\.*' -type d -iwholename "*${FINDARGUMENT%/}*" | awk '{ print length, $0 }' | sort -n | cut -d" " -f2- | head - -n 1 | sed -e 's/ /\\ /')"
+	DESTINATION="$( find -L ~ -not -path '*/\.*' -type d \
+		-iwholename "*${FINDARGUMENT%/}*" | \
+		awk '{ print length, $0 }' | \
+		sort -n | \
+		cut -d" " -f2- | \
+		head - -n 1 | \
+		sed -e 's/ /\\ /')"
 fi
 if [[ $VERBOSE = TRUE ]]
 then
