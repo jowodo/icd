@@ -30,7 +30,7 @@ echo "======================================"
 echo "[1] ~/.bashrc (default)"
 echo "[2] ~/.bash_functions"
 echo "[3] other file"
-echo "[4] /dev/null"
+echo "[4] /dev/null (update)"
 read input 
 if [[ $input = 2 ]]; then DESTFILE=$HOME/.bash_functions ; fi
 if [[ $input = 3 ]]; then

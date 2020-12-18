@@ -25,11 +25,27 @@ POSITIONAL=()
 VERBOSE=FALSE
 VERYVERBOSE=FALSE
 LOCAL=FALSE
+MAPPING=FALSE
+FOLLOW=""
+#HIDDEN="-not -path '*/\.*'"
+
 while [[ $# -gt 0 ]]
 do
 	key="$1"
 
 	case $key in
+#		-s|--secret)
+#			HIDDEN=""
+#			shift # past argument
+#			;;
+		-f|--follow)
+			FOLLOW=-L
+			shift # past argument
+			;;
+		-m|--map)
+			MAPPING=TRUE
+			shift # past argument
+			;;
 		-v|--verbose)
 			VERBOSE=TRUE
 			shift # past argument
@@ -64,35 +80,30 @@ do
 ################################################################
 DESTINATION=""
 FOUND=""
-if [[ $LOCAL = TRUE ]] 
-then 
-	DESTINATION="$( find -L . -not -path '*/\.*' -type d \
-		-iwholename "*${FINDARGUMENT%/}*" | \
-		awk '{ print length, $0 }' | \
-		sort -n | \
-		cut -d" " -f2- | \
-		head - -n 1 | \
-		sed -e 's/ /\\ /')"
-else 
-	#HERE COMES CASCATION OF FILES
-	DESTINATION="$( find -L ~ -not -path '*/\.*' -type d \
-		-iwholename "*${FINDARGUMENT%/}*" | \
-		awk '{ print length, $0 }' | \
-		sort -n | \
-		cut -d" " -f2- | \
-		head - -n 1 | \
-		sed -e 's/ /\\ /')"
+START=~
+if [[ $LOCAL = TRUE ]]; then 
+	START="."
 fi
-if [[ $VERBOSE = TRUE ]]
-then
+	#HERE COMES CASCATION OF FILES
+#DESTINATION="$( find $FOLLOW $START $HIDDEN -type d \
+DESTINATION="$( find $FOLLOW $START -not -path '*/\.*' -type d \
+	-iwholename "*${FINDARGUMENT%/}*" | \
+	awk '{ print length, $0 }' | \
+	sort -n | \
+	cut -d" " -f2- | \
+	head - -n 1 | \
+	sed -e 's/ /\\ /')"
+
+if [[ $VERBOSE = TRUE ]]; then
 	echo "$DESTINATION"
 fi
-if [[ $VERYVERBOSE = TRUE ]]
-then 
+if [[ $VERYVERBOSE = TRUE ]]; then 
 	echo "$DESTINATION"
 fi
 # CHANGE DIR	
 ################################################################
+#if [[ $MAPPING = TRUE ]]; then
+#fi
 cd $DESTINATION
 }
 
