@@ -30,6 +30,7 @@ chmod +x install.sh
 `icd . doc` may change to `./anypath/doc`  
 `icd -m -f -m pic > ~/.icd/55_pics`
 
+~~~
 /home/user/
 └┬─ Documents
  │  ├─ School
@@ -40,7 +41,7 @@ chmod +x install.sh
  │  ├─ Personal
  │  └─ Work
  └── Videos
-~~~
+
 icd sch -v 
 /home/user/Pictures/School/
 icd doc -v
