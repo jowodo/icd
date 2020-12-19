@@ -2,22 +2,18 @@
 
 function icd(){
 	# todo
-	# abilities
 	# -h help 
-	# -v verbose
-	# -m? map tree and out to stdout
-# cat ~/.icd/99_map | grep -i -e $FINDARGUMENT | awk '{print length, $0}' | sort -n | cut -d" " -f2- | head - -n 1 | sed -e 's/ /\\ /'
-	# -f follow links
 	# -s secret dirs 
-	# - last dir
-	# ~/.icd/00_favorites
-	# ~/.icd/55_map
-	# ~/.icd/99_history 
+	# icd ~$USER
 
 HELPTEXT="USAGE: icd [-h|--help] [-v|--verbose] [-l|.|--local] [keyword]\n\n
-\t-h|--help\tshow this help text\n
-\t-v|--verbose\tdestination directory\n
-\t-l|.|--local\tsearch at current directory"
+\t-h|--help\tshow this help text and exit\n
+\t-v|--verbose\tshow path of destination directory\n
+\t-vv|--veryverbose\tdestination directory\n
+\t-m|--map\tmap home filesystem and print to standard out and exit\n
+\t-f|--follow\tfollow symbolic links (recommended for mapping)\n
+\t-\tgo to previous directory\n
+\t-l|.|--local\tstart search at current directory"
 
 # PARSER + SET FLAGS
 ################################################################
@@ -27,6 +23,9 @@ VERYVERBOSE=FALSE
 LOCAL=FALSE
 MAPPING=FALSE
 FOLLOW=""
+START=~
+DESTINATION=""
+FOUND=""
 #HIDDEN="-not -path '*/\.*'"
 
 while [[ $# -gt 0 ]]
@@ -38,6 +37,10 @@ do
 #			HIDDEN=""
 #			shift # past argument
 #			;;
+		.|-l|--local)
+			START=$(pwd)
+			shift # past argument
+			;;
 		-f|--follow)
 			FOLLOW=-L
 			shift # past argument
@@ -54,13 +57,10 @@ do
 			VERYVERBOSE=TRUE
 			shift # past argument
 			;;
+		-)
+			cd - && return 0;; 
 		-h|--help)
-			shift # past argument
 			echo -e $HELPTEXT && return 0;; 
-		.|-l|--local)
-			LOCAL=TRUE
-			shift # past argument
-			;;
 		*)    # unknown option
 			POSITIONAL+=("$1") # save it in an array for later
 			shift # past argument
@@ -78,32 +78,36 @@ do
 
 # FIND DIR
 ################################################################
-DESTINATION=""
-FOUND=""
-START=~
-if [[ $LOCAL = TRUE ]]; then 
-	START="."
-fi
-	#HERE COMES CASCATION OF FILES
-#DESTINATION="$( find $FOLLOW $START $HIDDEN -type d \
-DESTINATION="$( find $FOLLOW $START -not -path '*/\.*' -type d \
-	-iwholename "*${FINDARGUMENT%/}*" | \
-	awk '{ print length, $0 }' | \
-	sort -n | \
-	cut -d" " -f2- | \
-	head - -n 1 | \
-	sed -e 's/ /\\ /')"
+if [[ $MAPPING == TRUE ]]; then 
+	echo "$( find $FOLLOW $START -not -path '*/\.*' -type d -iwholename "*${FINDARGUMENT%/}*")" 
+else
+	#CHECKING MAP-FILES
+	MAPRESULTS=$(grep -i $FINDARGUMENT $HOME/.icd/[0-9]* | awk '{ split($0,a,":") ;print length(a[2]), $0}' | sort | head -n1 | cut -d" " -f2-)
+	FOUNDIN=${MAPRESULTS%:*}
+	DESTINATION=${MAPRESULTS#*:}
 
-if [[ $VERBOSE = TRUE ]]; then
-	echo "$DESTINATION"
-fi
-if [[ $VERYVERBOSE = TRUE ]]; then 
-	echo "$DESTINATION"
-fi
-# CHANGE DIR	
-################################################################
-#if [[ $MAPPING = TRUE ]]; then
-#fi
-cd $DESTINATION
+	if [[ $DESTINATION = "" ]]; then  #echo "do search"; else  echo "use this $d"; fi 
+
+		#DESTINATION="$( find $FOLLOW $START $HIDDEN -type d \
+		DESTINATION="$( find $FOLLOW $START -not -path '*/\.*' -type d \
+			-iwholename "*${FINDARGUMENT%/}*" | \
+			awk '{ print length, $0 }' | \
+			sort -n | \
+			cut -d" " -f2- | \
+			head - -n 1 | \
+			sed -e 's/ /\\ /')"
+			FOUNDIN="active search"
+	fi	
+
+	if [[ $VERBOSE = TRUE ]]; then
+		echo "$DESTINATION"
+	fi
+	if [[ $VERYVERBOSE = TRUE ]]; then 
+		echo "$DESTINATION found from $FOUNDIN"
+	fi
+	# CHANGE DIR	
+	############################################################
+	cd $DESTINATION
+fi 
 }
 
