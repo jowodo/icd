@@ -5,6 +5,7 @@ function icd(){
 	# -h help 
 	# -s secret dirs 
 	# icd ~$USER
+	# check map files in ascending order
 
 HELPTEXT="USAGE: icd [-h|--help] [-v|--verbose] [-l|.|--local] [keyword]\n\n
 \t-h|--help\tshow this help text and exit\n
@@ -68,7 +69,7 @@ do
 	esac
 	done
 	set -- "${POSITIONAL[@]}" # restore positional parameters
-	if [[ ${#POSITIONAL[@]} -gt 1 ]]
+	if [[ ${#POSITIONAL[@]} -gt 1 ]] 
 	then 
 		echo "Too many arguments!"
 		echo -e $HELPTEXT
@@ -82,20 +83,18 @@ if [[ $MAPPING == TRUE ]]; then
 	echo "$( find $FOLLOW $START -not -path '*/\.*' -type d -iwholename "*${FINDARGUMENT%/}*")" 
 else
 	#CHECKING MAP-FILES
-	MAPRESULTS=$(grep -i $FINDARGUMENT $HOME/.icd/[0-9]* | awk '{ split($0,a,":") ;print length(a[2]), $0}' | sort | head -n1 | cut -d" " -f2-)
+	MAPRESULTS=$(grep -i $FINDARGUMENT $HOME/.icd/[0-9]* | awk '{print length, $0}' | sort -n | head -n1 | cut -d" " -f2- ) 
 	FOUNDIN=${MAPRESULTS%:*}
 	DESTINATION=${MAPRESULTS#*:}
 
-	if [[ $DESTINATION = "" ]]; then  #echo "do search"; else  echo "use this $d"; fi 
-
+	if [[ $DESTINATION = "" ]]; then  
 		#DESTINATION="$( find $FOLLOW $START $HIDDEN -type d \
 		DESTINATION="$( find $FOLLOW $START -not -path '*/\.*' -type d \
 			-iwholename "*${FINDARGUMENT%/}*" | \
 			awk '{ print length, $0 }' | \
 			sort -n | \
 			cut -d" " -f2- | \
-			head - -n 1 | \
-			sed -e 's/ /\\ /')"
+			head - -n 1 )"
 			FOUNDIN="active search"
 	fi	
 
@@ -107,7 +106,7 @@ else
 	fi
 	# CHANGE DIR	
 	############################################################
-	cd $DESTINATION
+	cd "$DESTINATION"
 fi 
 }
 

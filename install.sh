@@ -21,7 +21,7 @@ cp -v $PWD/icd $HOME/.icd/icd
 
 source icd
 echo "saving map of home filesystem ..."
-icd -m > $HOME/.icd/99_map 
+icd -m -f > $HOME/.icd/99_map 
 echo "saved map of home filesytem to ~/.icd/99_map"
 echo ""
 

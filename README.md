@@ -11,7 +11,7 @@ cd icd
 chmod +x install.sh
 ./install.sh
 ```
-##Command line options
+## Command line options
 
 ~~~USAGE: icd [-h|--help] [-v|--verbose] [-l|.|--local] [keyword]
 -h|--help          show this help text and exit
@@ -28,3 +28,28 @@ chmod +x install.sh
 `icd uni` may change to `~/Documents/Univeristy`  
 `icd uni*doc` may change to `~/Documents/University/Documents`  
 `icd . doc` may change to `./anypath/doc`  
+`icd -m -f -m pic > ~/.icd/55_pics`
+
+/home/user/
+└┬─ Documents
+ │  ├─ School
+ │  ├─ Personal
+ │  └─ Work
+ ├─ Pictures
+ │  ├─ School
+ │  ├─ Personal
+ │  └─ Work
+ └── Videos
+~~~
+icd sch -v 
+/home/user/Pictures/School/
+icd doc -v
+/home/user/Documents/
+icd do*sch -v
+/home/user/Documents/School/
+icd - -v 
+/home/user/Documents/
+icd . work
+/home/user/Documents/Work
+
+~~~
