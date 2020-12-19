@@ -2,14 +2,21 @@
 **Avoid using tiresome aliases to change directories!**
 Change into arbitrary subdirectories.
 The "algorithm" is greedy: the shortest matching path is used.
-At the moment it only works for medium size trees, but fear not. 
-Optimization is on it's way!
+It maps your home directory at "installation" and searches 
+the map to find the directory which you want to change into. 
+It might be usefull to set an alias to often used command line
+options. I for example use `alias icd="icd -f"` as I have 
+linked `/mnt` somewhere into my home. You can also manually 
+create map files with the naming covention XX_name, where X
+is a digit [0-9] and name my be any alphanumeric combination.
+
 ## Installation
 ```
 git clone https://github.com/pur80a/icd.git
 cd icd
 chmod +x install.sh
 ./install.sh
+bash
 ```
 ## Command line options
 
@@ -24,12 +31,8 @@ chmod +x install.sh
 ~~~
 
 
-## Examples
-`icd uni` may change to `~/Documents/Univeristy`  
-`icd uni*doc` may change to `~/Documents/University/Documents`  
-`icd . doc` may change to `./anypath/doc`  
-`icd -m -f -m pic > ~/.icd/55_pics`
 
+## Examples
 ~~~
 /home/user/
 └┬─ Documents

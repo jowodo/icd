@@ -19,9 +19,17 @@ PWD=$(pwd)
 mkdir -vp $HOME/.icd
 cp -v $PWD/icd $HOME/.icd/icd
 
+f=-f
 source icd
-echo "saving map of home filesystem ..."
-icd -m -f > $HOME/.icd/99_map 
+echo "=========================================="
+echo "| Follow links while mapping filesystem? |"
+echo "=========================================="
+echo -e "[yes] follow links (default)\n[no] don't follow links"
+read input 
+if [[ input = "no" ]]; then f="" ; fi
+echo "saving map of home filesystem "
+echo "this might take some time depending on your filesystem size..."
+icd -m $f > $HOME/.icd/99_map 
 echo "saved map of home filesytem to ~/.icd/99_map"
 echo ""
 
