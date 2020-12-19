@@ -20,7 +20,8 @@ chmod +x install.sh
 -m|--map           map home filesystem and print to standard out and exit
 -f|--follow        follow symbolic links (recommended for mapping)
 -l|.|--local       start search at current directory
--                  go to previous directory~~~k
+-                  go to previous directory
+~~~
 
 
 ## Examples
