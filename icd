@@ -6,6 +6,8 @@ function icd(){
 	# -s secret dirs 
 	# icd ~$USER
 	# check map files in ascending order
+	# if locally dont use map (mounted link)
+	# when mapping and $FOLLOW=FALSE dont map links
 
 HELPTEXT="USAGE: icd [-h|--help] [-v|--verbose] [-l|.|--local] [keyword]\n\n
 \t-h|--help\tshow this help text and exit\n
@@ -40,6 +42,7 @@ do
 #			;;
 		.|-l|--local)
 			START=$(pwd)
+			LOCAL=TRUE
 			shift # past argument
 			;;
 		-f|--follow)
@@ -82,10 +85,12 @@ do
 if [[ $MAPPING == TRUE ]]; then 
 	echo "$( find $FOLLOW $START -not -path '*/\.*' -type d -iwholename "*${FINDARGUMENT%/}*")" 
 else
-	#CHECKING MAP-FILES
-	MAPRESULTS=$(grep -i $FINDARGUMENT $HOME/.icd/[0-9]* | awk '{print length, $0}' | sort -n | head -n1 | cut -d" " -f2- ) 
-	FOUNDIN=${MAPRESULTS%:*}
-	DESTINATION=${MAPRESULTS#*:}
+	#CHECK MAP-FILES if not local
+	if [[ $LOCAL == FALSE ]]; then 
+		MAPRESULTS=$(grep -i $FINDARGUMENT $HOME/.icd/[0-9]* | awk '{print length, $0}' | sort -n | head -n1 | cut -d" " -f2- ) 
+		FOUNDIN=${MAPRESULTS%:*}
+		DESTINATION=${MAPRESULTS#*:}
+	fi 
 
 	if [[ $DESTINATION = "" ]]; then  
 		#DESTINATION="$( find $FOLLOW $START $HIDDEN -type d \
