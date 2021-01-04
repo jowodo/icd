@@ -26,11 +26,12 @@ echo "| Follow links while mapping filesystem? |"
 echo "=========================================="
 echo -e "[yes] follow links (default)\n[no] don't follow links"
 read input 
-if [[ input = "no" ]]; then f="" ; fi
+if [[ $input == "no" || $input == "n" ]]; then f=""; echo "not following symbolic links" ; fi
 echo "saving map of home filesystem "
 echo "this might take some time depending on your filesystem size..."
-icd -m $f > $HOME/.icd/99_map 
-echo "saved map of home filesytem to ~/.icd/99_map"
+mapfile=$HOME/.icd/55_map
+icd -m $f > $mapfile
+echo "saved map of home filesytem to $mapfile"
 echo ""
 
 ###count length of destdir

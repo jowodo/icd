@@ -14,8 +14,9 @@ HELPTEXT="USAGE: icd [-h|--help] [-v|--verbose] [-l|.|--local] [keyword]\n\n
 \t-v|--verbose\tshow path of destination directory\n
 \t-vv|--veryverbose\tdestination directory\n
 \t-m|--map\tmap home filesystem and print to standard out and exit\n
+\t-n|--nomap\tdo not use map for searching\n
 \t-f|--follow\tfollow symbolic links (recommended for mapping)\n
-\t-\tgo to previous directory\n
+\t-\t\tgo to previous directory\n
 \t-l|.|--local\tstart search at current directory"
 
 # PARSER + SET FLAGS
@@ -29,6 +30,7 @@ FOLLOW=""
 START=~
 DESTINATION=""
 FOUND=""
+USEMAP=TRUE
 #HIDDEN="-not -path '*/\.*'"
 
 while [[ $# -gt 0 ]]
@@ -43,14 +45,20 @@ do
 		.|-l|--local)
 			START=$(pwd)
 			LOCAL=TRUE
+			USEMAP=FALSE
 			shift # past argument
 			;;
 		-f|--follow)
 			FOLLOW=-L
+			USEMAP=FALSE
 			shift # past argument
 			;;
 		-m|--map)
 			MAPPING=TRUE
+			shift # past argument
+			;;
+		-n|--nomap)
+			USEMAP=FALSE
 			shift # past argument
 			;;
 		-v|--verbose)
@@ -85,8 +93,9 @@ do
 if [[ $MAPPING == TRUE ]]; then 
 	echo "$( find $FOLLOW $START -not -path '*/\.*' -type d -iwholename "*${FINDARGUMENT%/}*")" 
 else
-	#CHECK MAP-FILES if not local
-	if [[ $LOCAL == FALSE ]]; then 
+	#CHECK MAP-FILES if not local or follow
+#	if [[ $LOCAL == FALSE or $FOLLOW != "" ]]; then 
+	if [[ $USEMAP == TRUE ]]; then 
 		MAPRESULTS=$(grep -i $FINDARGUMENT $HOME/.icd/[0-9]* | awk '{print length, $0}' | sort -n | head -n1 | cut -d" " -f2- ) 
 		FOUNDIN=${MAPRESULTS%:*}
 		DESTINATION=${MAPRESULTS#*:}
