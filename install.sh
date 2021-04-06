@@ -50,7 +50,8 @@ read input
 if [[ $input = 2 ]]; then DESTFILE=$HOME/.bash_functions ; fi
 if [[ $input = 3 ]]; then
 	echo -n "Please specify location: "
-	read DESTFILE
+	read INPUT
+	DESTFILE=$(echo $INPUT | sed "s|~|$HOME|")
 fi
 if [[ $input = 4 ]]; then DESTFILE=/dev/null ; fi 
 
