@@ -10,6 +10,8 @@ function icd(){
 	# when mapping and $FOLLOW=FALSE dont map links
 	# -mm output to map file ? oder -m to file und -mm manuallymap
 	# -u update mapfile also $ icd -m > ~/.icd/55_map
+	# when not found in map files, append to standard map file
+	# make config file 
 
 HELPTEXT="USAGE: icd [-h|--help] [-v|--verbose] [-l|.|--local] [keyword]\n\n
 \t-h|--help\tshow this help text and exit\n
