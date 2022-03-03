@@ -10,7 +10,7 @@ linked `/mnt` somewhere into my home. You can also manually
 create map files with the naming covention XX_name, where X
 is a digit [0-9] and name my be any alphanumeric combination.
 
-## Installation
+## Installation (only Linux) 
 ```
 git clone https://github.com/pur80a/icd.git
 cd icd
